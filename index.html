@@ -16,14 +16,15 @@
     }
     .motor-img{
     width: 100%;
-    max-width: 500px;
+    max-width: 450px;
     height: auto;
     transform: scale(1.1);
     }
     @media (max-width: 768px) {
     .motor-img {
-        max-width: 280px;
-        margin-top: 20px;
+        max-width: 250px;
+        display: block;
+        margin: 20px auto 0 auto;
     }
 }
 </style>
@@ -36,7 +37,7 @@
 
 <h2 class="text-center mb-4">🔌 Calculadora Profesional de Motores Electricos</h2>
 
-<div class="row align-items-center">
+<div class="col-md-6 order-1 order-md-1">
 
     <!-- FORMULARIO -->
     <div class="col-md-6">
@@ -79,7 +80,7 @@
     </div>
 
     <!-- IMAGEN MOTOR -->
-    <div class="col-md-6 text-center">
+   <div class="col-md-6 text-center order-2 order-md-2 mt-4 mt-md-0">
         <!-- Coloca tu imagen en la misma carpeta y cambia el nombre si quieres -->
         <img src="motor.png" alt="Motor Eléctrico" class="motor-img">
     </div>
