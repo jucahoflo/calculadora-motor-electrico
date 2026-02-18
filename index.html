@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Profesional de Motor</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body{
+        background-color:#f4f6f9;
+    }
+    .card-custom{
+        border-radius:15px;
+    }
+    .motor-img{
+    width: 130%;
+    max-width: 600px;
+    height: auto;
+    transform: scale(1.1);
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container mt-5">
+<div class="card card-custom shadow-lg p-4">
+
+<h2 class="text-center mb-4">🔌 Calculadora Profesional de Motores Electricos</h2>
+
+<div class="row align-items-center">
+
+    <!-- FORMULARIO -->
+    <div class="col-md-6">
+
+        <div class="mb-3">
+            <label class="form-label">Potencia (HP)</label>
+            <input type="number" id="hp" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Voltaje</label>
+            <select id="voltaje" class="form-select">
+                <option value="220">220 V</option>
+                <option value="480">480 V</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Sistema</label>
+            <select id="sistema" class="form-select">
+                <option value="trifasico">Trifásico</option>
+                <option value="bifasico">Bifásico</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Factor de Potencia</label>
+            <input type="number" id="fp" class="form-control" value="0.9" step="0.01">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Eficiencia (%)</label>
+            <input type="number" id="eficiencia" class="form-control" value="90">
+        </div>
+
+        <button onclick="calcular()" class="btn btn-primary w-100">
+            Calcular
+        </button>
+
+    </div>
+
+    <!-- IMAGEN MOTOR -->
+    <div class="col-md-6 text-center">
+        <!-- Coloca tu imagen en la misma carpeta y cambia el nombre si quieres -->
+        <img src="motor.png" alt="Motor Eléctrico" class="motor-img">
+    </div>
+
+</div>
+
+<!-- RESULTADOS -->
+<div class="mt-4" id="resultado"></div>
+
+</div>
+</div>
+
+<script>
+
+function seleccionarComercial(valor) {
+    const comerciales = [9,12,18,25,32,40,50,65,80,95,110,150,200];
+    for(let i=0;i<comerciales.length;i++){
+        if(valor <= comerciales[i]){
+            return comerciales[i];
+        }
+    }
+    return "Mayor a 200A";
+}
+
+function calcular(){
+
+    let hp = parseFloat(document.getElementById("hp").value);
+    let voltaje = parseFloat(document.getElementById("voltaje").value);
+    let sistema = document.getElementById("sistema").value;
+    let fp = parseFloat(document.getElementById("fp").value);
+    let eficiencia = parseFloat(document.getElementById("eficiencia").value)/100;
+
+    if(isNaN(hp) || hp<=0){
+        alert("Ingrese un HP válido");
+        return;
+    }
+
+    let kw = hp * 0.746;
+    let watts = (kw*1000)/eficiencia;
+
+    let corriente;
+
+    if(sistema === "trifasico"){
+        corriente = watts/(1.732*voltaje*fp);
+    }else{
+        corriente = watts/(voltaje*fp);
+    }
+
+    let contactorCalc = corriente*1.25;
+    let contactorFinal = seleccionarComercial(contactorCalc);
+
+    let releCalc = corriente*1.15;
+    let releFinal = seleccionarComercial(releCalc);
+
+    document.getElementById("resultado").innerHTML = `
+    <div class="alert alert-success">
+        <h5>Resultados Técnicos</h5>
+        <hr>
+        <p><strong>Potencia:</strong> ${kw.toFixed(2)} kW</p>
+        <p><strong>Corriente nominal:</strong> ${corriente.toFixed(2)} A</p>
+        <hr>
+        <p><strong>Contactor recomendado:</strong> ${contactorFinal} A</p>
+        <p><strong>Protección térmica:</strong> ${releFinal} A</p>
+        <small>Basado en criterios generales de normativa industrial (NEC)</small>
+    </div>
+    `;
+}
+
+</script>
+
+</body>
+</html>
